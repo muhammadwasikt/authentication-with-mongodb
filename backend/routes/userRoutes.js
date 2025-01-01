@@ -92,7 +92,7 @@ userRoutes.post('/forgot-password', async (req, res) => {
 
         await existingUser.save();
 
-        sendResetEmail(email , `http://localhost:5173/reset-password/${token}`)
+        sendResetEmail(email , `https://authentication-with-mongodb.vercel.app/reset-password/${token}`)
 
         res.status(200).send({ status: 200, message: "Email sent successfully" , data : existingUser })
 
