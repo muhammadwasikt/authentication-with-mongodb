@@ -3,7 +3,7 @@ import { store } from '../redux/store';
 
 const apiClient = axios.create({
     baseURL: import.meta.env.VITE_BACKEND_API,
-    timeout: 3000,
+    timeout: 9000,
     headers: {
         'Content-Type': 'application/json',
     },

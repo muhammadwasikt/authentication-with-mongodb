@@ -7,19 +7,19 @@ const ProtectedRoutes = () => {
 
     const navigate = useNavigate()
     const user = useSelector(state => state.user.userId)
-
+console.log(user);
 
 
     useEffect(() => {
-        if (!user.length > 0) {
+        if (!user) {
             navigate('/auth/signin')
         }
-    })
+    }, [user])
 
     return (
         <>
             {
-                user.length > 0 && <Outlet /> 
+                user && <Outlet /> 
             }
         </>
     )

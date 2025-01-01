@@ -21,10 +21,11 @@ const SignUp = () => {
 
     const onSubmit = async (data) => {
 
-        if (await postReq('/user/register', data)) {
+        const response = await postReq('/user/register', data)
+        reset()
+        if (response) {
             navigate('/')
         }
-        reset()
 
     }
 

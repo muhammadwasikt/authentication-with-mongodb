@@ -36,7 +36,7 @@ const SignIn = () => {
         if (user) {
             navigate('/')
         }
-    }, [user])
+    })
 
     return (
         <div className="w-full h-screen flex justify-center items-center p-2">
