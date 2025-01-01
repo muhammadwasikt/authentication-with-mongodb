@@ -23,9 +23,9 @@ const SignIn = () => {
 
     const onSubmit = async (data) => {
         try {
-            const response = await axios.get('https://authenticationmongodb.vercel.app/user/login', data)
+            const response = await axios.post('https://authenticationmongodb.vercel.app/user/login', data)
             dispatch(userToken(response))
-            const userResponse = await axios.get('https://authenticationmongodb.vercel.app/user/protected')
+            const userResponse = await axios.post('https://authenticationmongodb.vercel.app/user/protected')
             dispatch(userId(userResponse));
             reset()
         }
