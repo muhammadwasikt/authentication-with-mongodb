@@ -23,7 +23,7 @@ const ResetPassword = () => {
         }
 
         const response = await postReq(`/user/reset-password/${token}`, {password: password})
-        navigate('/')
+        navigate('/auth/signin')
         reset()
         
 
