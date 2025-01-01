@@ -16,8 +16,10 @@ const ForgotPassword = () => {
     const onSubmit = async (data) => {
        
         const response = await postReq('/user/forgot-password',data)
+        if (response) {
+            navigate('/password-reset-email') 
+        }
         reset()
-        navigate('/password-reset-email')
     };
 
     return (

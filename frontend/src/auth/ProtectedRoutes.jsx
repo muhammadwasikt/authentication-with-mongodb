@@ -11,15 +11,15 @@ const ProtectedRoutes = () => {
 
 
     useEffect(() => {
-        if (!user) {
+        if (!user.length > 0) {
             navigate('/auth/signin')
         }
-    }, [user])
+    })
 
     return (
         <>
             {
-                user && <Outlet /> 
+                user.length > 0 && <Outlet /> 
             }
         </>
     )
