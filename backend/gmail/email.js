@@ -3,7 +3,7 @@ import { transporter } from "./emailsender.js";
 
 export const sendResetEmail = async ( email , url ) => {
     transporter.sendMail({
-        from: 'noreply@gmail.com',
+        from: 'asharimran41@gmail.com',
         to: email,
         subject: 'Password Reset Request',
         text: 'Click the link below to reset your password.',
