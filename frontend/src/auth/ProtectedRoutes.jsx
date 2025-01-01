@@ -7,7 +7,6 @@ const ProtectedRoutes = () => {
 
     const navigate = useNavigate()
     const user = useSelector(state => state.user.userId)
-console.log(user);
 
 
     useEffect(() => {
