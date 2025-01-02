@@ -34,7 +34,7 @@ export const sendEmailVerification = async (email, otp , token) => {
             html: `
             <p style = 'margin: 10px auto'>Hi, <br> your email verification code is:</p>
             <h1 style = 'margin: 10px auto'>${otp}</h1>
-            <p style ='margin: 10px auto'>Click the link below to verify your email.<a href=http://localhost:5173/email-verification/${token}>verify email</a></p>
+            <p style ='margin: 10px auto'>Click the link below to verify your email.<a href=https://authenticationflow.vercel.app/email-verification/${token}>verify email</a></p>
             `,
         })
         console.log('Reset email sent to:', email);
