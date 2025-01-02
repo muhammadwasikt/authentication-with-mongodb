@@ -96,7 +96,6 @@ userRoutes.post('/forgot-password', async (req, res) => {
 
         res.status(200).send({ status: 200, message: "Email sent successfully" , data : existingUser })
 
-
     }
     catch (error) {
         res.status(500).send({ status: 500, message: error });
