@@ -5,6 +5,7 @@ import cors from 'cors';
 import { userRoutes } from './routes/userRoutes.js';
 
 
+
 const app = express()
 dotenv.config()
 app.use(express.json())
@@ -18,7 +19,6 @@ app.get('/',(req , res)=>{
     res.status(200).send('Welcome to Backend')
 })
 app.use('/user',userRoutes)
-
 
 
 

@@ -24,7 +24,7 @@ const SignUp = () => {
         const response = await postReq('/user/register', data)
         reset()
         if (response) {
-            navigate('/')
+            navigate(`/email-verification/${response.verificationToken}`)
         }
 
     }

@@ -1,4 +1,5 @@
 import ForgotPassword from "../auth/ForgotPassword";
+import OTPVerification from "../auth/OtpVerification";
 import ProtectedRoutes from "../auth/ProtectedRoutes";
 import ResetPassword from "../auth/ResetPassword";
 import SignIn from "../auth/SignIn";
@@ -36,6 +37,10 @@ export const routes = [
     {
         path: '/password-reset-email',
         element: <EmailCheckPage />
+    },
+    {
+        path: '/email-verification/:token',
+        element: <OTPVerification />
     },
     {
         path: '*',

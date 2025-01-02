@@ -5,7 +5,7 @@ import jwt from 'jsonwebtoken';
 import dotenv from 'dotenv';
 import verifyToken from '../utils/constant/verifyToken.js';
 import crypto from 'crypto';
-import { sendResetEmail } from '../gmail/email.js';
+import { sendEmailVerification, sendResetEmail } from '../gmail/email.js';
 
 export const userRoutes = express.Router()
 dotenv.config()
@@ -25,6 +25,16 @@ userRoutes.post('/register', async (req, res) => {
         const data = req.body;
         const { name, email, password } = data
 
+        const otpId = Date.now().toString();
+        const otp = otpId.slice(3,9)
+        const otpExpiresAt = Date.now() + 1 * 60 * 60 * 1000;
+
+        if (otp < 6) {
+            return otp + 1
+        }
+        data.emailOtp = otp
+        data.emailOtpExpiresAt = otpExpiresAt;
+
         // check unique user name
         const existingUserName = await User.findOne({ name });
 
@@ -43,11 +53,19 @@ userRoutes.post('/register', async (req, res) => {
         const encryptPSW = await bcrypt.hash(password, 10);
         data.password = encryptPSW;
 
+
+        const token = crypto.randomBytes(20).toString("hex");
+
+
+        data.verificationToken = token
+
+        sendEmailVerification(email, otp , token )
+
         // create new user
         const response = await User.create(data)
         res.status(201).send({ status: 201, message: "User registered successfully", data: response })
     } catch (error) {
-        res.status(400).send({ status: 400, message: 'Something went wrong' })
+        res.status(400).send({ status: 400, message: error.message })
     }
 })
 userRoutes.post('/login', async (req, res) => {
@@ -56,15 +74,19 @@ userRoutes.post('/login', async (req, res) => {
 
         const existingUser = await User.findOne({ email });
 
+        
         if (!existingUser) {
             return res.status(404).send({ status: 404, message: "User not found" })
         }
         const isMatch = await bcrypt.compare(password, existingUser.password);
-
+        
         if (!isMatch) {
             return res.status(401).send({ status: 401, message: "Invalid credentials" })
         };
-
+        
+        if (existingUser.emailVerified === false) {
+            return res.status(404).send({ status: 404, message: "Email not verified" });
+        }
         const token = jwt.sign({ id: existingUser._id }, secret, { expiresIn: '1h' });
 
         res.status(200).send({ status: 200, message: "Login Successfully", data: token });
@@ -88,13 +110,13 @@ userRoutes.post('/forgot-password', async (req, res) => {
         const tokenExpiresAt = Date.now() + 1 * 60 * 60 * 1000;
 
         existingUser.resetPasswordToken = token
-        existingUser.resetPasswordExpiresAt = tokenExpiresAt;
+        existingUser.resetPasswordTokenExpiresAt = tokenExpiresAt;
 
         await existingUser.save();
 
-        sendResetEmail(email , `https://authenticationflow.vercel.app/reset-password/${token}`)
+        sendResetEmail(email, `https://authenticationflow.vercel.app/reset-password/${token}`)
 
-        res.status(200).send({ status: 200, message: "Email sent successfully" , data : existingUser })
+        res.status(200).send({ status: 200, message: "Email sent successfully", data: existingUser })
 
     }
     catch (error) {
@@ -122,6 +144,34 @@ userRoutes.post('/reset-password/:token', async (req, res) => {
     }
     catch (error) {
         res.status(400).send({ message: error.message })
+    }
+
+})
+
+userRoutes.post('/email-verification/:token', async (req, res) => {
+
+    const data = req.body;
+    const { token } = req.params;
+    try {
+        const user = await User.findOne({ verificationToken: token })
+
+        if (!user) {
+            return res.status(404).send({ status: 404, message: "Invalid token or expired" })
+        }
+
+        if (!user.emailOtp === data) {
+            return res.status(404).send({ status: 404, message: "Invalid otp or expired" })
+        }
+        user.verificationToken = undefined;
+        user.verificationTokenExpiresAt = undefined;
+        user.emailVerified = true;
+        user.emailOtp = undefined;
+        user.emailOtpExpiresAt = undefined;
+        await user.save();
+        res.status(200).send({status:200, message: "Email verified successfully" ,data: user.emailVerified})
+    }
+    catch (error) {
+        res.status(400).send({ message: error })
     }
 
 })

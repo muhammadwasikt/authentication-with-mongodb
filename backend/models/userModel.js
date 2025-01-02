@@ -9,6 +9,11 @@ const UserSchema = mongoose.Schema({
     isActive: { type: Boolean, default: false },
     resetPasswordToken: { type: String },
     resetPasswordTokenExpiresAt: { type: Date },
+    emailOtp: { type: String },
+    emailOtpExpiresAt: { type: Date },
+    verificationToken: { type: String },
+    verificationTokenExpiresAt: { type: Date },
+    emailVerified: { type: Boolean, default: false },
 }, {timestamps: true })
 
 
