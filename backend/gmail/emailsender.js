@@ -10,9 +10,9 @@ export var transporter = nodemailer.createTransport({
     auth: {
         user: process.env.SENDER_EMAIL,
         pass: process.env.SENDER_PASSWORD
+    }
     },
     tls: {
         rejectUnauthorized: false, 
     },
 });
-}
